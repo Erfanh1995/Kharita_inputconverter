@@ -1,3 +1,5 @@
+#Author : Erfan Hosseini
+
 import utm
 import glob
 import os
@@ -14,7 +16,7 @@ for name in files:
 	with open(name, 'r') as f1:
 		a = f1.readlines()
 		for line in a:
-			savior.append([os.path.basename(name)[:-4],str(datetime.datetime(100,1,1,11,34,59)+datetime.timedelta(0,round(float(line.split()[2]))))+"+03", utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[0], utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1], 20])
+			savior.append([os.path.basename(name)[:-4],str(datetime.datetime(2011,1,1,11,34,59)+datetime.timedelta(0,round(float(line.split()[2]))))+"+03", utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[0], utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1], 20])
 			if flag == True:
 				if (utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1] - savior[it-1][3]) != 0:
 					temp = (utm.to_latlon(round(float(line.split()[0])), round(float(line.split()[1])), 34, 'S')[0] - savior[it-1][2])/(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1] - savior[it-1][3])
