@@ -8,11 +8,16 @@ import datetime
 import math
 from geopy.distance import geodesic
 
+#final output
 savior = []
+#iteration over the final output list
 it = 0
+#last timestamps if available
 last_t = 0
+#flag for checking whether we are at the first point of the trajectory or not (needed to calculate angle and speed)
 flag = False
-path = '/Users/erfan/PycharmProjects/montseny_turohome_5m/*.txt'
+path = '' #pathname here
+#reading files
 files = glob.glob(path)
 contains_timestamp = input("Do the files contain timestamps?(Y/N)")
 if contains_timestamp == "Y" or contains_timestamp == "y":
@@ -21,10 +26,12 @@ if contains_timestamp == "Y" or contains_timestamp == "y":
 			a = f1.readlines()
 			for line in a:
 				savior.append([os.path.basename(name)[:-4],str(datetime.datetime(2011,1,1,11,34,59)+datetime.timedelta(0,round(float(line.split()[2]))))+"+03", utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[0], utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1]])
+				#finding speed and angle
 				if flag == True:
 					speed = geodesic(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S'),tuple(savior[it-1][2:4])).meters/(round(float(line.split()[2]))-last_t)
-					#print(round(float(geodesic(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S'),tuple(savior[it-1][2:4]))[:-3])*1000))
-					savior[it-1].append(speed)
+					#adding speed
+					savior[it-1].append(speed) 
+					#computing angle
 					if (utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1] - savior[it-1][3]) != 0:
 						temp = (utm.to_latlon(round(float(line.split()[0])), round(float(line.split()[1])), 34, 'S')[0] - savior[it-1][2])/(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1] - savior[it-1][3])
 						if temp < -1 or temp > 1:
@@ -56,9 +63,12 @@ elif contains_timestamp == "N" or contains_timestamp == "n":
 			a = f2.readlines()
 			for line in a:
 				savior.append([os.path.basename(name)[:-4],str(datetime.datetime(2011,1,1,11,34,59)+datetime.timedelta(0,i))+"+03", utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[0], utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1]])
+				#finding speed and angle
 				if flag == True:
 					speed = geodesic(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S'),tuple(savior[it-1][2:4])).meters
+					#adding speed
 					savior[it-1].append(speed)
+					#computing angle
 					if (utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1] - savior[it-1][3]) != 0:
 						temp = (utm.to_latlon(round(float(line.split()[0])), round(float(line.split()[1])), 34, 'S')[0] - savior[it-1][2])/(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1] - savior[it-1][3])
 						if temp < -1 or temp > 1:
@@ -80,15 +90,16 @@ elif contains_timestamp == "N" or contains_timestamp == "n":
 				i += 1
 				it += 1
 				flag = True
+		#adding the last point's speed and angle (Does not exist so same as the previous point)
 		savior[-1].append(savior[-2][4])
 		savior[-1].append(savior[-2][5])
 		flag = False
 else:
 	print("invalid option!")
 
-file = open('montseny.csv', 'w+', newline='')
+file = open('kharita_input.csv', 'w+', newline='')
 
-# writing the data into the file
+#writing the data into the file
 with file:
 	write = csv.writer(file)
 	write.writerows(savior)
