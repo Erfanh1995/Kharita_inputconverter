@@ -17,7 +17,7 @@ it = 0
 last_t = 0
 #flag for checking whether we are at the first point of the trajectory or not (needed to calculate angle and speed)
 flag = False
-path = '' #pathname here
+path = '/*.txt' #pathname here
 #reading files
 files = glob.glob(path)
 contains_timestamp = input("Do the files contain timestamps?(Y/N)")
