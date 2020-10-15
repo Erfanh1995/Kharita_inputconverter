@@ -8,6 +8,7 @@ import datetime
 import math
 from geopy.distance import geodesic
 
+utm_data = [31,'T']
 #final output
 savior = []
 #iteration over the final output list
@@ -25,15 +26,15 @@ if contains_timestamp == "Y" or contains_timestamp == "y":
 		with open(name, 'r') as f1:
 			a = f1.readlines()
 			for line in a:
-				savior.append([os.path.basename(name)[:-4],str(datetime.datetime(2011,1,1,11,34,59)+datetime.timedelta(0,round(float(line.split()[2]))))+"+03", utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[0], utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1]])
+				savior.append([os.path.basename(name)[:-4],str(datetime.datetime(2011,1,1,11,34,59)+datetime.timedelta(0,round(float(line.split()[2]))))+"+03", utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),utm_data[0],utm_data[1])[0], utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),utm_data[0],utm_data[1])[1]])
 				#finding speed and angle
 				if flag == True:
-					speed = geodesic(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S'),tuple(savior[it-1][2:4])).meters/(round(float(line.split()[2]))-last_t)
+					speed = geodesic(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),utm_data[0],utm_data[1]),tuple(savior[it-1][2:4])).meters/(round(float(line.split()[2]))-last_t)
 					#adding speed
 					savior[it-1].append(speed) 
 					#computing angle
-					if (utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1] - savior[it-1][3]) != 0:
-						temp = (utm.to_latlon(round(float(line.split()[0])), round(float(line.split()[1])), 34, 'S')[0] - savior[it-1][2])/(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1] - savior[it-1][3])
+					if (utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),utm_data[0],utm_data[1])[1] - savior[it-1][3]) != 0:
+						temp = (utm.to_latlon(round(float(line.split()[0])), round(float(line.split()[1])), utm_data[0], utm_data[1])[0] - savior[it-1][2])/(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),utm_data[0],utm_data[1])[1] - savior[it-1][3])
 						if temp < -1 or temp > 1:
 							if math.degrees(math.asin(temp%1))>=0:
 								savior[it - 1].append(math.degrees(math.asin(temp%1)))
@@ -45,7 +46,7 @@ if contains_timestamp == "Y" or contains_timestamp == "y":
 							else:
 								savior[it - 1].append(360 + math.degrees(math.asin(temp)))
 					else:
-						if utm.to_latlon(round(float(line.split()[0])), round(float(line.split()[1])), 34, 'S')[0] - savior[it-1][2] > 0:
+						if utm.to_latlon(round(float(line.split()[0])), round(float(line.split()[1])), utm_data[0], utm_data[1])[0] - savior[it-1][2] > 0:
 							savior[it - 1].append(90)
 						else:
 							savior[it - 1].append(180)
@@ -62,15 +63,15 @@ elif contains_timestamp == "N" or contains_timestamp == "n":
 			i = 0
 			a = f2.readlines()
 			for line in a:
-				savior.append([os.path.basename(name)[:-4],str(datetime.datetime(2011,1,1,11,34,59)+datetime.timedelta(0,i))+"+03", utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[0], utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1]])
+				savior.append([os.path.basename(name)[:-4],str(datetime.datetime(2011,1,1,11,34,59)+datetime.timedelta(0,i))+"+03", utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),utm_data[0],utm_data[1])[0], utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),utm_data[0],utm_data[1])[1]])
 				#finding speed and angle
 				if flag == True:
-					speed = geodesic(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S'),tuple(savior[it-1][2:4])).meters
+					speed = geodesic(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),utm_data[0],utm_data[1]),tuple(savior[it-1][2:4])).meters
 					#adding speed
 					savior[it-1].append(speed)
 					#computing angle
-					if (utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1] - savior[it-1][3]) != 0:
-						temp = (utm.to_latlon(round(float(line.split()[0])), round(float(line.split()[1])), 34, 'S')[0] - savior[it-1][2])/(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),34,'S')[1] - savior[it-1][3])
+					if (utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),utm_data[0],utm_data[1])[1] - savior[it-1][3]) != 0:
+						temp = (utm.to_latlon(round(float(line.split()[0])), round(float(line.split()[1])), utm_data[0], utm_data[1])[0] - savior[it-1][2])/(utm.to_latlon(round(float(line.split()[0])),round(float(line.split()[1])),utm_data[0],utm_data[1])[1] - savior[it-1][3])
 						if temp < -1 or temp > 1:
 							if math.degrees(math.asin(temp%1))>=0:
 								savior[it - 1].append(math.degrees(math.asin(temp%1)))
@@ -82,7 +83,7 @@ elif contains_timestamp == "N" or contains_timestamp == "n":
 							else:
 								savior[it - 1].append(360 + math.degrees(math.asin(temp)))
 					else:
-						if utm.to_latlon(round(float(line.split()[0])), round(float(line.split()[1])), 34, 'S')[0] - savior[it-1][2] > 0:
+						if utm.to_latlon(round(float(line.split()[0])), round(float(line.split()[1])), utm_data[0], utm_data[1])[0] - savior[it-1][2] > 0:
 							savior[it - 1].append(90)
 						else:
 							savior[it - 1].append(180)
